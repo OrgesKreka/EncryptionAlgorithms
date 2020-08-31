@@ -26,8 +26,8 @@ public class CaesarCipher
     // This method will encrypt the message using Caesar cipher.
     // 
     // 1. The offset should be positive
-    // 2. 
-    String cipher(String message, int offset )
+    // 2. The string should not be null or empty
+    String encrypt(String message, int offset )
     {
         if(offset < 0 ) throw new InvalidParameterException("Offset less than 0 ");
 
@@ -65,5 +65,51 @@ public class CaesarCipher
         }
 
         return encryptedMessage;
+    }
+
+
+    public String decrypt(String encryptedMessage, int offset )
+    {
+        if(offset < 0 ) throw new InvalidParameterException("Offset less than 0 ");
+
+        if(encryptedMessage == null || encryptedMessage.trim().isEmpty()) throw new InvalidParameterException("encrypted null or empty");
+
+
+        String decryptedMessage = "";
+
+         // Second, initiliaze empty string and add aplhabets
+         for(int i = 0; i < encryptedMessage.length(); i++)
+         {
+             char character = encryptedMessage.charAt(i);
+ 
+             // if the character is not alphabetic, we leave it as it is
+             // and continue to the other letter
+             if( ! Character.isAlphabetic(character))
+             {
+                 decryptedMessage += character;
+                 continue;
+             }
+             
+                 // value of each alphabet in integers like A = 0, B = 1 ...
+             int letterIndex = ALPHABET.indexOf(Character.toLowerCase(character));
+ 
+             // index of unShifted letter
+             int unShiftedIndex = (letterIndex - offset) % ALPHABET.length();
+             
+             // if the offset is greater than length of the alphabet
+             // we find the letter index by adding the unshiftedIndex
+             if(unShiftedIndex < 0 )
+                unShiftedIndex = ALPHABET.length() + unShiftedIndex;
+
+             // new value
+             char unShiftedValue = ALPHABET.charAt(unShiftedIndex);
+ 
+             // if letter in the message is upperCase shifted letter is also in upper case
+             decryptedMessage += Character.isUpperCase(character) ? Character.toUpperCase(unShiftedValue) : unShiftedValue;
+             
+ 
+         }
+ 
+         return decryptedMessage;
     }
 }
